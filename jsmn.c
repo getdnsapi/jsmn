@@ -45,7 +45,7 @@ static int jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 			/* In strict mode primitive must be followed by "," or "}" or "]" */
 			case ':':
 #endif
-			case '\t' : case '\r' : case '\n' : case ' ' :
+			case '\t' : case '\r' : case '\n' : case ' ' : case '>':
 			case ','  : case ']'  : case '}' :
 				goto found;
 		}
@@ -232,7 +232,7 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 				if (parser->toksuper != -1 && tokens != NULL)
 					tokens[parser->toksuper].size++;
 				break;
-			case '\t' : case '\r' : case '\n' : case ' ':
+			case '\t' : case '\r' : case '\n' : case ' ': case '>':
 				break;
 			case ':':
 				parser->toksuper = parser->toknext - 1;
@@ -255,6 +255,30 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 #endif
 				}
 				break;
+			case '<':
+				if (parser->pos + 14 < len &&
+				    js[parser->pos+ 1] == 'b' &&
+				    js[parser->pos+ 2] == 'i' &&
+				    js[parser->pos+ 3] == 'n' &&
+				    js[parser->pos+ 4] == 'd' &&
+				    js[parser->pos+ 5] == 'a' &&
+				    js[parser->pos+ 6] == 't' &&
+				    js[parser->pos+ 7] == 'a' &&
+				    js[parser->pos+ 8] == ' ') {
+					if (js[parser->pos+ 9] == 'o' &&
+					    js[parser->pos+10] == 'f' &&
+					    js[parser->pos+11] == ' ') {
+						parser->pos += 11;
+						break;
+
+					} else if (js[parser->pos+ 9] == 'f' &&
+					    js[parser->pos+10] == 'o' &&
+					    js[parser->pos+11] == 'r' &&
+					    js[parser->pos+12] == ' ') {
+						parser->pos += 12;
+						break;
+					}
+				}
 #ifdef JSMN_STRICT
 			/* In strict mode primitives are: numbers and booleans */
 			case '-': case '0': case '1' : case '2': case '3' : case '4':
