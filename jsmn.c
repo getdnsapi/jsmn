@@ -49,7 +49,10 @@ static int jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 				if (tokens[parser->toksuper].type != JSMN_OBJECT)
 					break;
 #endif
-			case '\t' : case '\r' : case '\n' : case ' ' : case '>':
+			case '\t' : case '\r' : case '\n' : case ' ' :
+#ifdef JSMN_GETDNS
+			case '>':
+#endif
 			case ','  : case ']'  : case '}' :
 				goto found;
 		}
@@ -236,7 +239,10 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 				if (parser->toksuper != -1 && tokens != NULL)
 					tokens[parser->toksuper].size++;
 				break;
-			case '\t' : case '\r' : case '\n' : case ' ': case '>':
+			case '\t' : case '\r' : case '\n' : case ' ':
+#ifdef JSMN_GETDNS
+			case '>':
+#endif
 				break;
 			case ':':
 				parser->toksuper = parser->toknext - 1;
@@ -259,6 +265,7 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 #endif
 				}
 				break;
+#ifdef JSMN_GETDNS
 			case '<':
 				if (parser->pos + 14 < len &&
 				    js[parser->pos+ 1] == 'b' &&
@@ -283,6 +290,7 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 						break;
 					}
 				}
+#endif
 #ifdef JSMN_STRICT
 			/* In strict mode primitives are: numbers and booleans */
 			case '-': case '0': case '1' : case '2': case '3' : case '4':
