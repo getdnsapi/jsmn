@@ -44,6 +44,10 @@ static int jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 #if !defined(JSMN_STRICT) && !defined(JSMN_GETDNS)
 			/* In strict mode primitive must be followed by "," or "}" or "]" */
 			case ':':
+#elif defined(JSMN_GETDNS)
+			case ':':
+				if (tokens[parser->toksuper].type != JSMN_OBJECT)
+					break;
 #endif
 			case '\t' : case '\r' : case '\n' : case ' ' : case '>':
 			case ','  : case ']'  : case '}' :
