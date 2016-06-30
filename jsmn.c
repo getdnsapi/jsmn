@@ -61,7 +61,7 @@ static int jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 			return JSMN_ERROR_INVAL;
 		}
 	}
-#if defined(JSMN_STRICT) || defined(JSMN_GETDNS)
+#if defined(JSMN_STRICT)
 	/* In strict mode primitive must be followed by a comma/object/array */
 	parser->pos = start;
 	return JSMN_ERROR_PART;
