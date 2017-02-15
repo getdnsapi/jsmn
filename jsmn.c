@@ -46,7 +46,8 @@ static int jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 			case ':':
 #elif defined(JSMN_GETDNS)
 			case ':':
-				if (tokens[parser->toksuper].type != JSMN_OBJECT)
+				if (parser->toksuper < 0 ||
+				    tokens[parser->toksuper].type != JSMN_OBJECT)
 					break;
 #endif
 			case '\t' : case '\r' : case '\n' : case ' ' :
