@@ -295,9 +295,9 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 					}
 				}
 #endif
-			        /* fallthrough */
 #ifdef JSMN_STRICT
 			/* In strict mode primitives are: numbers and booleans */
+			/* fallthrough */
 			case '-': case '0': case '1' : case '2': case '3' : case '4':
 			case '5': case '6': case '7' : case '8': case '9':
 			case 't': case 'f': case 'n' :
@@ -311,6 +311,7 @@ int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 				}
 #else
 			/* In non-strict mode every unquoted value is a primitive */
+			/* fallthrough */
 			default:
 #endif
 				r = jsmn_parse_primitive(parser, js, len, tokens, num_tokens);
